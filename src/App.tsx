@@ -1,9 +1,25 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import reactLogo from "./assets/react.svg";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const initWorker = async () => {
+      const instance = new ComlinkWorker<typeof import("./worker")>(
+        new URL("./worker", import.meta.url),
+        {
+          type: "module",
+        }
+      );
+
+      const result = await instance.add(1, 2);
+      setCount(result);
+    };
+
+    initWorker();
+  }, []);
 
   return (
     <div className="App">
@@ -28,7 +44,7 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
